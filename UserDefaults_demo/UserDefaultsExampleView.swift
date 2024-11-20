@@ -13,6 +13,9 @@ struct UserDefaultsExampleView: View {
   
   var body: some View {
     VStack(spacing: 20) {
+      
+        Text(username.isEmpty ? "Who are you anyway?" : "Hello, \(username)!")
+      
       TextField("Enter your name", text: $username)
         .textFieldStyle(RoundedBorderTextFieldStyle())
         .padding()
@@ -20,8 +23,21 @@ struct UserDefaultsExampleView: View {
         .onAppear {
           isFocused = true
         }
-      if !username.isEmpty {
-        Text("Hello, \(username)!")
+      
+      HStack {
+        Button("Save") {
+          UserDefaults.standard.set(username, forKey: "username")
+        }
+        Button("Load") {
+          if let savedName = UserDefaults.standard.string(forKey: "username") {
+            username = savedName
+          }
+        }
+        
+        Button("Clear") {
+          UserDefaults.standard.removeObject(forKey: "username")
+          username = "" 
+        }
       }
     }
     .padding()
